@@ -97,7 +97,6 @@ class ItemController extends Controller
                     1    => 'Active',
                     0    => 'Inactive'
                 ]);
-
                 $filter->between('created_at', 'Created Time')->datetime();
 
             });

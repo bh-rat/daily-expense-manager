@@ -49,3 +49,6 @@ Route::get('/add-vendor', function(){
 Route::get('/add-item', function(){
     return view('welcome');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
