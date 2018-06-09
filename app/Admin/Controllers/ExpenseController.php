@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Expense;
 
 use App\Item;
+use App\PosDay;
 use App\User;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -123,6 +124,32 @@ class ExpenseController extends Controller
         return Admin::form(Expense::class, function (Form $form) {
 
             $form->display('id', 'ID');
+
+            $form->decimal('quantity');
+            $form->decimal('rate');
+            $form->decimal('amount', 'Total Price');
+
+            $pos_days_options = [];
+            $pos_days = PosDay::orderBy('id', 'desc')->take(30)->get();
+            foreach($pos_days as $pos_day)
+                $pos_days_options[$pos_day->id] = $pos_day->pos_date;
+            $form->select('pos_day_id', 'Pos Date')->options($pos_days_options);
+
+            $users_options = [];
+            $users = User::orderBy('id', 'desc')->get();
+            foreach($users as $user)
+                $users_options[$user->id] = $user->name;
+            $form->select('user_id', 'User(Added By)')->options($users_options);
+
+            $items_options = [];
+            $items = Item::orderBy('name')->get();
+            foreach($items as $item)
+                $items_options[$item->id] = $item->name;
+            $form->select('item_id', 'Item')->options($items_options);
+
+            $form->textarea('notes');
+            $form->switch('bill_available');
+            $form->image('image_id', 'Bill Image')->removable();
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');

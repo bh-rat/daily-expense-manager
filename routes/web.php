@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('test', 'TestController@index');
+
 //route for login
 Route::get('/login', function () {
     return view('welcome');

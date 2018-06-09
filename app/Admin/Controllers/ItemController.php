@@ -25,8 +25,8 @@ class ItemController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('List of Items');
+            $content->description('List of all items that we usually buy');
 
             $content->body($this->grid());
         });
@@ -58,8 +58,8 @@ class ItemController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Add a new Item');
+            $content->description('Make sure it isn\'t currently added. Try to give in all the information.');
 
             $content->body($this->form());
         });
@@ -75,22 +75,26 @@ class ItemController extends Controller
         return Admin::grid(Item::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->name()->sortable();
-            $grid->price()->sortable();
-            $grid->quantity()->sortable();
-            $grid->vendor()->display(function($vendor_id) {
-                return Vendor::find($vendor_id)->name;
-            });
+            $grid->name()->sortable()->editable();
+            $grid->brand_name('Brand')->sortable()->editable();
+            $grid->price()->sortable()->editable();
+            $grid->quantity()->sortable()->editable();
+            $grid->unit()->sortable();
+            $grid->vendor_id('Vendor')->display(function($vendorId) {
+                return Vendor::find($vendorId)->name;
+            })->sortable();
 
-            $grid->is_active()->sortable();
+            $grid->is_active()->sortable()->editable();
             $grid->type()->sortable();
 
             $grid->filter(function ($filter) {
 
                 // Sets the range query for the created_at field
                 $filter->like('name', 'Name');
+                $filter->like('brand_name', 'Brand');
                 $filter->between('price', 'Price');
                 $filter->between('quantity', 'Quantity');
+                $filter->between('filter', 'Filter');
                 $filter->like('vendor', 'Vendor');
                 $filter->equal('is_active')->radio([
                     ''   => 'All',
@@ -131,7 +135,8 @@ class ItemController extends Controller
 
             $form->select('vendor_id', 'Vendor')->options($vendors_options);
 
-            $form->text('type');
+            $form->select('type', 'Type')->options(['Dairy', 'Grocery', 'Packaging', 'Delivery', 'Vegetables', 'Fruits',
+                'Housekeeping']);
             $form->text('unit');
 
             $form->display('created_at', 'Created At');
