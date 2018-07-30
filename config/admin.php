@@ -68,11 +68,11 @@ return [
      */
     'upload' => [
 
-        'disk' => 'admin',
+        'disk' => 's3',
 
         'directory' => [
-            'image' => 'images',
-            'file'  => 'files',
+            'image' => 'admin/images',
+            'file'  => 'admin/files',
         ],
     ],
 

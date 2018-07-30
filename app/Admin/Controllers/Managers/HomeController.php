@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
+use App\PosDay;
 use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Column;
@@ -15,10 +16,25 @@ class HomeController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('Your Dashboard');
-            $content->description('Dashboard');
+            $content->header('Hi ' . Admin::user()->name);
+            $content->description('Let\'s get to work!');
 
-            $content->row(Dashboard::title());
+            $pos_day = PosDay::active();
+            $day_open = null;
+
+            if($pos_day == null){
+                $day_open = null;
+                $content->row('No days Open');
+            }
+            else if($pos_day instanceof PosDay){
+                $day_open  = 'single';
+                $content->row("Current Pos : ".$pos_day->pos_date);
+            }
+            else {
+                $day_open = 'multiple';
+                $content->row('MULTIPLE DAYS OPEN');
+            }
+
 
             $content->row(function (Row $row) {
 

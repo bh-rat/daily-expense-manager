@@ -24,6 +24,7 @@ class CreateExpensesTable extends Migration
             $table->string('notes', 1000);  //extra notes for the
             $table->boolean('bill_available');  //is original bill available
             $table->integer('image_id');    //image of the bill
+            $table->string('image_url');    //image of the bill
             $table->timestamps();
         });
     }

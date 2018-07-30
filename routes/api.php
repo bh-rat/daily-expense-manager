@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/item/rate', function(Request $request){
+    $item = App\Item::find($request->q);
+    if($item != null)
+        return [ $item->price ];
+    else
+        return 0;
+});

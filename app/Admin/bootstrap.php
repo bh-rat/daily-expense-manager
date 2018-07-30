@@ -19,3 +19,4 @@
  */
 
 Encore\Admin\Form::forget(['map', 'editor']);
+Encore\Admin\Form::extend('select_ch', \App\Admin\Extensions\Select::class);

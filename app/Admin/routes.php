@@ -18,3 +18,13 @@ Route::group([
     $router->resource('/items', ItemController::class);
 
 });
+
+Route::group([
+    'prefix'        => 'manager',
+    'namespace'     => 'App\\Admin\\Controllers\\Managers',
+    'middleware'    => ['web'],
+], function (Router $router) {
+
+    $router->get('/', 'HomeController@index');
+
+});

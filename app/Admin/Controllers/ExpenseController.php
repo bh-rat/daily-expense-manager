@@ -27,8 +27,8 @@ class ExpenseController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('List of all expenses');
+            $content->description('All the expenses listed here.');
 
             $content->body($this->grid());
         });
@@ -44,8 +44,8 @@ class ExpenseController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Edit expense');
+            $content->description('Change values of expense.');
 
             $content->body($this->form()->edit($id));
         });
@@ -60,8 +60,8 @@ class ExpenseController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Note new expense');
+            $content->description('Use Frontend for doing this.');
 
             $content->body($this->form());
         });
@@ -81,10 +81,10 @@ class ExpenseController extends Controller
             $grid->quantity()->sortable();
             $grid->rate()->sortable();
             $grid->amount()->sortable();
-            $grid->item()->display(function($item_id) {
+            $grid->item_id('Item')->display(function($item_id) {
                 return Item::find($item_id)->name;
             })->sortable();
-            $grid->user()->display(function($user_id) {
+            $grid->user_id('User')->display(function($user_id) {
                 return User::find($user_id)->name;
             })->sortable();
             $grid->notes();
@@ -125,6 +125,12 @@ class ExpenseController extends Controller
 
             $form->display('id', 'ID');
 
+            $items_options = [];
+            $items = Item::orderBy('name')->get();
+            foreach($items as $item)
+                $items_options[$item->id] = $item->name;
+            $form->select_ch('item_id', 'Item')->options($items_options)->load_field('rate', '/api/item/rate');
+
             $form->decimal('quantity');
             $form->decimal('rate');
             $form->decimal('amount', 'Total Price');
@@ -141,15 +147,9 @@ class ExpenseController extends Controller
                 $users_options[$user->id] = $user->name;
             $form->select('user_id', 'User(Added By)')->options($users_options);
 
-            $items_options = [];
-            $items = Item::orderBy('name')->get();
-            foreach($items as $item)
-                $items_options[$item->id] = $item->name;
-            $form->select('item_id', 'Item')->options($items_options);
-
             $form->textarea('notes');
             $form->switch('bill_available');
-            $form->image('image_id', 'Bill Image')->removable();
+            $form->image('image_url', 'Bill Image')->removable()->move('/bills')->uniqueName();
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
